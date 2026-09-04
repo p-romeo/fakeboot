@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Fakeboot — the social graph of fake shoe-repair storefronts. Interactive investigation by Paul Romeo."
+    />
+    <meta name="theme-color" content="#0a0e17" />
+    <meta property="og:title" content="Fakeboot — Fake Shoe-Repair Network" />
+    <meta
+      property="og:description"
+      content="Fourteen impersonation storefronts, eight payment hosts, one WordPress handle. Interactive investigation map."
+    />
+    <title>Fakeboot — The social graph of fake shoe-repair storefronts</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <div class="bg-grid" aria-hidden="true"></div>
+    <div class="bg-glow" aria-hidden="true"></div>
+
+    <header class="site-header">
+      <div class="header-inner">
+        <a class="logo" href="#top" aria-label="Fakeboot home">
+          <span class="logo-mark" aria-hidden="true">F</span>
+          <span class="logo-text">Fakeboot</span>
+        </a>
+        <nav class="nav-links" aria-label="Sections">
+          <a href="#graph">Graph</a>
+          <a href="#shops">Shops</a>
+          <a href="#money">Money flow</a>
+          <a href="#maps">Maps</a>
+          <a href="#filings">Filings</a>
+          <a href="#story">Story</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="hero" id="top">
+        <span class="hero-badge">
+          <span class="pulse" aria-hidden="true"></span>
+          Investigation · Public recon only
+        </span>
+        <h1>Fakeboot</h1>
+        <p class="hero-tagline">
+          The social graph of fake shoe-repair storefronts
+        </p>
+        <div class="hero-counters" id="hero-counters"></div>
+        <p class="hero-meta">
+          Investigator: <strong>Paul Romeo</strong> (third party) · Operator
+          handle <strong>viethoa24</strong> (WordPress string only)
+        </p>
+        <div class="hero-cta">
+          <a class="btn btn-primary" href="#graph">Explore the network</a>
+          <a class="btn btn-ghost" href="#shops">Browse all 14 shops</a>
+        </div>
+      </section>
+
+      <section class="graph-section" id="graph">
+        <span class="section-label">Network graph</span>
+        <h2>Fourteen fake local shops → who takes the money</h2>
+        <p class="section-desc">
+          Drag to pan · scroll to zoom · click a node for details. Blue =
+          fake shops, orange = payment hosts, green = WordPress handle,
+          grey = registrar.
+        </p>
+        <div class="graph-panel reveal">
+          <div class="graph-toolbar">
+            <span class="graph-hint">Interactive · offline-capable</span>
+            <div class="graph-controls" aria-label="Graph zoom controls">
+              <button type="button" id="zoom-in" title="Zoom in">+</button>
+              <button type="button" id="zoom-out" title="Zoom out">−</button>
+              <button type="button" id="zoom-fit" title="Fit to view">◎</button>
+            </div>
+          </div>
+          <div id="network-graph" role="img" aria-label="Network graph of fake shops and payment hosts"></div>
+          <div class="graph-legend">
+            <span class="legend-item">
+              <span class="legend-dot" style="background: #1877f2"></span>
+              Fake shop
+            </span>
+            <span class="legend-item">
+              <span class="legend-dot" style="background: #f97316"></span>
+              Takes the money
+            </span>
+            <span class="legend-item">
+              <span class="legend-dot" style="background: #22c55e"></span>
+              WordPress handle
+            </span>
+            <span class="legend-item">
+              <span class="legend-dot" style="background: #64748b"></span>
+              Registrar
+            </span>
+            <span class="legend-item">
+              <span class="legend-line" style="color: #f97316"></span>
+              Checkout route
+            </span>
+          </div>
+        </div>
+      </section>
+
+      <section id="shops">
+        <span class="section-label">Shop explorer</span>
+        <h2>All 14 fake storefronts</h2>
+        <p class="section-desc">
+          Filter by payment host or search by name/domain. Click a card to
+          highlight it on the graph.
+        </p>
+        <div class="explorer-controls reveal">
+          <input
+            class="search-input"
+            id="shop-search"
+            type="search"
+            placeholder="Search shops or domains… (/ to focus)"
+            aria-label="Search shops"
+          />
+          <div class="filter-chips" id="filter-chips"></div>
+        </div>
+        <div class="shop-grid" id="shop-grid"></div>
+      </section>
+
+      <section id="money">
+        <span class="section-label">Money flow</span>
+        <h2>Who takes the money</h2>
+        <p class="section-desc">
+          Checkout on each fake shop routes to a third-party payment host —
+          grouped by destination.
+        </p>
+        <div class="money-grid" id="money-flow"></div>
+      </section>
+
+      <section id="maps">
+        <span class="section-label">Maps contamination</span>
+        <h2>PC-016 / PC-017 hits</h2>
+        <p class="section-desc">
+          Fake URLs attached to real Google Maps listings. Suggest-an-edit
+          corrections submitted for National, Cobblers, Nu-Way, and Verona;
+          remaining listings paused.
+        </p>
+        <div class="maps-grid" id="maps-grid"></div>
+        <p class="maps-note reveal">
+          Maps suggest-edits submitted for <strong>National Shoe Services</strong>,
+          <strong>Chicago Cobblers Dynasty</strong>, <strong>Nu-Way Shoe Repair</strong>,
+          and <strong>Verona Leather Shoe</strong>. Other corrections paused pending review.
+        </p>
+      </section>
+
+      <section id="filings">
+        <span class="section-label">Takedown status</span>
+        <h2>Filings status board</h2>
+        <p class="section-desc">
+          Current state of abuse reports and regulatory filings across channels.
+        </p>
+        <div class="filings-board" id="filings-board"></div>
+      </section>
+
+      <section id="story">
+        <span class="section-label">How it works</span>
+        <h2>The factory</h2>
+        <p class="section-desc">
+          A plain-English walkthrough of the impersonation pipeline.
+        </p>
+        <div class="story-timeline" id="story-timeline"></div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>
+        <strong>Fakeboot</strong> — investigation microsite by
+        <a href="https://paulromeo.net">Paul Romeo</a>
+      </p>
+      <ul class="notes-list" id="footer-notes"></ul>
+      <p style="margin-top: 1.5rem; opacity: 0.6">
+        No named natural persons identified as operators. Victim shop owners are
+        not part of this network.
+      </p>
+    </footer>
+
+    <div class="drawer-overlay" id="drawer-overlay" aria-hidden="true"></div>
+    <aside
+      class="drawer"
+      id="detail-drawer"
+      aria-hidden="true"
+      aria-label="Node details"
+    >
+      <div class="drawer-header">
+        <span style="font-weight: 600; color: var(--text-muted)">Details</span>
+        <button
+          class="drawer-close"
+          id="drawer-close"
+          type="button"
+          aria-label="Close details"
+        >
+          ×
+        </button>
+      </div>
+      <div class="drawer-body" id="drawer-content"></div>
+    </aside>
+
+    <div class="kbd-hint" aria-hidden="true">
+      <kbd>/</kbd> search · <kbd>g</kbd> graph · <kbd>Esc</kbd> close
+    </div>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
