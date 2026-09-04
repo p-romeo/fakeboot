@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta name="theme-color" content="#0a0e17"/>
+<title>Fakeboot — fake shoe-repair network</title>
+<meta name="description" content="Fakeboot: interactive investigation of impersonation shoe-repair storefronts by Paul Romeo."/>
+<style>
+:root{--bg:#0a0e17;--panel:#121826;--border:#1e293b;--text:#e8eef7;--muted:#94a3b8;--blue:#1877F2;--blue2:#3b9bff;--shop:#38bdf8;--pay:#fb923c;--op:#4ade80;--reg:#94a3b8}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--text);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+a{color:var(--blue2);text-decoration:none}a:hover{text-decoration:underline}
+.skip{position:absolute;left:-9999px}.skip:focus{left:1rem;top:1rem;background:#fff;color:#000;padding:.5rem;z-index:99}
+.header{position:sticky;top:0;z-index:40;backdrop-filter:blur(12px);background:rgba(10,14,23,.85);border-bottom:1px solid var(--border)}
+.header-inner{max-width:1100px;margin:0 auto;padding:.85rem 1.25rem;display:flex;align-items:center;gap:1rem;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:.6rem;font-weight:800;font-size:1.25rem;color:#fff}
+.logo-mark{width:2rem;height:2rem;border-radius:.55rem;background:linear-gradient(135deg,var(--blue),#0a4da8);display:grid;place-items:center;font-weight:900}
+nav{display:flex;gap:.9rem;flex-wrap:wrap;font-size:.9rem}
+nav a{color:var(--muted)}nav a:hover{color:#fff}
+.hero{max-width:1100px;margin:0 auto;padding:3rem 1.25rem 2rem}
+.hero h1{font-size:clamp(2.2rem,5vw,3.4rem);line-height:1.05;margin:0 0 .75rem;letter-spacing:-.03em}
+.hero h1 span{color:var(--blue2)}
+.tag{color:var(--muted);font-size:1.1rem;max-width:40rem}
+.counters{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.75rem;margin-top:1.75rem}
+.counter{background:var(--panel);border:1px solid var(--border);border-radius:1rem;padding:1rem 1.1rem}
+.counter b{display:block;font-size:1.8rem;color:#fff}
+.counter span{color:var(--muted);font-size:.85rem}
+.section{max-width:1100px;margin:0 auto;padding:1.5rem 1.25rem 2.5rem}
+.section h2{margin:0 0 .35rem;font-size:1.45rem}
+.section .sub{color:var(--muted);margin:0 0 1rem}
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:1.1rem;overflow:hidden}
+#graph{height:min(70vh,620px);width:100%;background:radial-gradient(ellipse at center,#121826 0%,#09090b 70%)}
+.legend{display:flex;flex-wrap:wrap;gap:.9rem;padding:.75rem 1rem;border-top:1px solid var(--border);font-size:.85rem;color:var(--muted)}
+.dot{width:.7rem;height:.7rem;border-radius:50%;display:inline-block;margin-right:.35rem}
+.toolbar{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:.8rem}
+input[type=search],select{background:#0b1220;border:1px solid var(--border);color:var(--text);border-radius:.7rem;padding:.55rem .8rem;min-width:12rem}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:.75rem}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:1rem;padding:1rem;cursor:pointer;transition:.15s}
+.card:hover,.card:focus{border-color:var(--blue);outline:none;transform:translateY(-1px)}
+.card h3{margin:0 0 .25rem;font-size:1rem}.card .dom{font-family:ui-monospace,monospace;font-size:.8rem;color:var(--blue2)}
+.card .pay{margin-top:.55rem;font-size:.85rem;color:var(--muted)}
+.money{display:grid;gap:1rem}
+.money-group{background:var(--panel);border:1px solid var(--border);border-radius:1rem;padding:1rem}
+.money-group h3{margin:0 0 .5rem;color:var(--pay)}
+.money-group ul{margin:0;padding-left:1.1rem;color:var(--muted)}
+.board{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.75rem}
+.board .item{background:var(--panel);border:1px solid var(--border);border-radius:1rem;padding:1rem}
+.board .ok{color:#4ade80}.board .blocked{color:#f87171}.board .hold{color:#fbbf24}
+.story{display:grid;gap:.8rem}
+.story .step{background:var(--panel);border-left:3px solid var(--blue);border-radius:.8rem;padding:1rem 1.1rem}
+.drawer{position:fixed;top:0;right:0;width:min(380px,100%);height:100%;background:#0f1624;border-left:1px solid var(--border);transform:translateX(100%);transition:.2s;z-index:50;padding:1.25rem;overflow:auto}
+.drawer.open{transform:none}
+.drawer h2{margin-top:0}
+.backdrop{position:fixed;inset:0;background:rgba(0,0,0,.45);opacity:0;pointer-events:none;transition:.2s;z-index:45}
+.backdrop.open{opacity:1;pointer-events:auto}
+.footer{max-width:1100px;margin:0 auto;padding:2rem 1.25rem 3rem;color:var(--muted);font-size:.85rem;border-top:1px solid var(--border)}
+.pill{display:inline-block;padding:.15rem .5rem;border-radius:999px;background:#1e293b;font-size:.75rem;margin-left:.35rem}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="header">
+  <div class="header-inner">
+    <a class="logo" href="#top"><span class="logo-mark">F</span> Fakeboot</a>
+    <nav>
+      <a href="#graph-sec">Graph</a>
+      <a href="#shops">Shops</a>
+      <a href="#money">Money</a>
+      <a href="#maps">Maps</a>
+      <a href="#filings">Filings</a>
+      <a href="#story">Story</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+<section class="hero" id="top">
+  <h1>Fakeboot — the social graph of <span>fake shoe-repair</span> storefronts</h1>
+  <p class="tag">Impersonation ecommerce posing as real U.S. local shops. Checkout routes to third-party payment hosts. Public recon by Paul Romeo. Victim shop owners are not the operators.</p>
+  <div class="counters" id="counters"></div>
+</section>
+
+<section class="section" id="graph-sec">
+  <h2>Network</h2>
+  <p class="sub">Drag to pan · scroll to zoom · click a bubble for details. Blue = fake shop · orange = takes the money.</p>
+  <div class="panel"><div id="graph"></div>
+    <div class="legend">
+      <span><i class="dot" style="background:var(--shop)"></i>Fake shop</span>
+      <span><i class="dot" style="background:var(--pay)"></i>Payment host</span>
+      <span><i class="dot" style="background:var(--op)"></i>Operator handle</span>
+      <span><i class="dot" style="background:var(--reg)"></i>Registrar</span>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="shops">
+  <h2>Shop explorer</h2>
+  <p class="sub">All locked Fakeboot storefronts.</p>
+  <div class="toolbar"><input id="q" type="search" placeholder="Filter shops…"/><select id="payFilter"><option value="">All payment hosts</option></select></div>
+  <div class="cards" id="cards"></div>
+</section>
+
+<section class="section" id="money">
+  <h2>Who takes the money</h2>
+  <p class="sub">Fake shops grouped by checkout destination.</p>
+  <div class="money" id="money"></div>
+</section>
+
+<section class="section" id="maps">
+  <h2>Maps contamination</h2>
+  <p class="sub">Fake domains injected into real Google Maps listings.</p>
+  <div class="board" id="maps"></div>
+</section>
+
+<section class="section" id="filings">
+  <h2>Filings board</h2>
+  <p class="sub">Abuse / LE status as of the investigation package.</p>
+  <div class="board" id="filings"></div>
+</section>
+
+<section class="section" id="story">
+  <h2>How the factory works</h2>
+  <div class="story">
+    <div class="step"><b>1. Fake local shop sites</b><br/>Look like real cobblers/tailors, claim real addresses and family histories.</div>
+    <div class="step"><b>2. Shared stack</b><br/>Namecheap registrations, Cloudflare NS pairs, EasyEngine/WordPress, shared public handle <code>viethoa24</code> (handle only — not a proven person).</div>
+    <div class="step"><b>3. Checkout hop</b><br/>Cart/checkout preloads third-party payment hosts (PayPal Client IDs + cart proxies).</div>
+    <div class="step"><b>4. Platform pollution</b><br/>Fake website fields appear on Google Maps listings for the real victim businesses.</div>
+  </div>
+</section>
+</main>
+<footer class="footer">
+  Fakeboot investigation microsite · Paul Romeo · public indicators only · <code>viethoa24</code> is a WordPress author string, not a named natural-person operator.
+</footer>
+<div class="backdrop" id="backdrop"></div>
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="dtitle" hidden>
+  <button id="dclose" style="float:right;background:transparent;border:0;color:#fff;font-size:1.4rem;cursor:pointer">×</button>
+  <h2 id="dtitle"></h2>
+  <div id="dbody"></div>
+</aside>
+<script type="text/javascript" src="https://unpkg.com/vis-network@9.1.9/standalone/umd/vis-network.min.js"></script>
+<script>
+const DATA = {"brand": "Fakeboot", "tagline": "The social graph of fake shoe-repair storefronts", "lockedShops": 15, "operatorHandle": "viethoa24 (WordPress admin/author string only \u2014 not a proven natural person)", "registrar": "Namecheap", "shopToPayment": [{"shop": "Verona Leather Shoe", "domain": "veronaleathershoe.com", "payment": "Hwamedia", "paymentDomain": "hwamedialimited.com"}, {"shop": "Cedar Grove Bootery", "domain": "cedargrovebootery.com", "payment": "Vihanau", "paymentDomain": "vihanau.com"}, {"shop": "Tarantino's Shoe Repair", "domain": "tarantinosshoerepair.com", "payment": "Ronbika", "paymentDomain": "ronbika.com"}, {"shop": "Uncle Hans", "domain": "unclehansshoerepairs.com", "payment": "Makerhub", "paymentDomain": "makerhublimited.com"}, {"shop": "All American Tailor", "domain": "allamericantailor.com", "payment": "Luna Makers", "paymentDomain": "lunamakerslimited.com"}, {"shop": "Leather Corner Binghamton", "domain": "leathercornershoerepair.com", "payment": "Nova Prints HK", "paymentDomain": "novaprintshklimited.com"}, {"shop": "Renew It Nanuet", "domain": "renewitshoerepair.com", "payment": "Luna Makers", "paymentDomain": "lunamakerslimited.com"}, {"shop": "Colfax Boot & Shoe (Lakewood CO)", "domain": "colfaxbootshoerepair.com", "payment": "Vihanau", "paymentDomain": "vihanau.com"}, {"shop": "Roswell/Wieuca Atlanta", "domain": "roswellwieucashoerepair.com", "payment": "Vihanau", "paymentDomain": "vihanau.com"}, {"shop": "Middletown Shoe Repair", "domain": "middletownshoerepair.com", "payment": "Vihanau", "paymentDomain": "vihanau.com"}, {"shop": "Meserole / Kim's Brooklyn", "domain": "meseroleshoerepair.com", "payment": "Duytina Stores", "paymentDomain": "duytinastores.com"}, {"shop": "Nu-Way Shoe Repair", "domain": "nu-wayshoerepair.com", "payment": "Echo Art Collective", "paymentDomain": "echoartcollectivelimited.com"}, {"shop": "National Shoe Services", "domain": "nationalshoeservices.com", "payment": "Echo Art Collective", "paymentDomain": "echoartcollectivelimited.com"}, {"shop": "Chicago Cobblers Dynasty", "domain": "chicagocobblersdynasty.com", "payment": "Vihanau", "paymentDomain": "vihanau.com"}, {"shop": "Warrick's Shoe Service", "domain": "warricksshoeservice.com", "payment": "Duytina Stores", "paymentDomain": "duytinastores.com"}], "payments": [{"label": "Hwamedia", "domain": "hwamedialimited.com"}, {"label": "Vihanau", "domain": "vihanau.com"}, {"label": "Ronbika", "domain": "ronbika.com"}, {"label": "Makerhub", "domain": "makerhublimited.com"}, {"label": "Luna Makers", "domain": "lunamakerslimited.com"}, {"label": "Nova Prints HK", "domain": "novaprintshklimited.com"}, {"label": "Duytina Stores", "domain": "duytinastores.com"}, {"label": "Echo Art Collective", "domain": "echoartcollectivelimited.com"}], "filings": {"namecheap": "submitted (thread + indicators + shop 13/14 addenda)", "ftc": "submitted \u2014 control 206624320", "googleAds": "submitted (no ticket #)", "maps": "4 website corrections submitted (National, Cobblers, Nu-Way, Verona); rest paused", "cloudflare": "blocked \u2014 CAPTCHA", "paypal": "blocked \u2014 login required", "ic3": "blocked \u2014 reporter phone required", "hkExtracts": "HOLD \u2014 paid extracts on pause"}, "mapsContamination": [{"id": "PC-016", "listing": "National Shoe Services, 1913 W Howard, Chicago", "fake": "nationalshoeservices.com", "mapsEdit": "submitted"}, {"id": "PC-017", "listing": "Chicago Cobblers Dynasty, 318 W Adams, Chicago", "fake": "chicagocobblersdynasty.com", "mapsEdit": "submitted"}, {"id": "PC-015-pending", "listing": "Warrick's Shoe Service, 300 Pine St #A, Normal IL", "fake": "warricksshoeservice.com", "mapsEdit": "pending VE"}], "notes": ["Impersonation ecommerce network posing as real US local shoe-repair / tailor shops", "Checkout routes to third-party payment hosts (PayPal Client IDs + cart proxies)", "Public recon only; victim shop owners are not operators", "Network nickname Fakeboot = play on Facebook"]};
+const shops = DATA.shopToPayment;
+const payments = DATA.payments;
+
+function $(id){return document.getElementById(id)}
+function filedClass(v){
+  const s=String(v).toLowerCase();
+  if(s.includes('hold')) return 'hold';
+  if(s.includes('blocked')||s.includes('paused')) return 'blocked';
+  if(s.includes('submitted')||s.includes('correction')) return 'ok';
+  return '';
+}
+
+// counters
+const submitted = Object.values(DATA.filings).filter(v=>/submitted/i.test(v)).length;
+$('counters').innerHTML = [
+  [DATA.lockedShops,'Locked fake shops'],
+  [payments.length,'Payment hosts'],
+  [submitted,'Filings with submissions'],
+  ['1','Shared WP handle']
+].map(([n,l])=>`<div class="counter"><b>${n}</b><span>${l}</span></div>`).join('');
+
+// graph
+const nodes = new vis.DataSet([
+  {id:'reg', label:'Namecheap', group:'reg', shape:'box', color:{background:'#334155',border:'#64748b'}, font:{color:'#fff'}},
+  {id:'op', label:'viethoa24', group:'op', shape:'ellipse', color:{background:'#166534',border:'#4ade80'}, font:{color:'#fff'}, title:'WP handle only'},
+  ...payments.map(p=>({id:'pay:'+p.domain, label:p.label, group:'pay', shape:'dot', size:22, color:{background:'#c2410c',border:'#fb923c'}, font:{color:'#fff'}, title:p.domain})),
+  ...shops.map(s=>({id:'shop:'+s.domain, label:s.shop, group:'shop', shape:'dot', size:16, color:{background:'#0369a1',border:'#38bdf8'}, font:{color:'#e2e8f0'}, title:s.domain}))
+]);
+const edges = new vis.DataSet([
+  ...shops.flatMap(s=>[
+    {from:'shop:'+s.domain, to:'pay:'+s.paymentDomain, arrows:'to', color:{color:'#fb923c'}, label:'checkout'},
+    {from:'op', to:'shop:'+s.domain, dashes:true, color:{color:'#4ade80', opacity:0.45}, arrows:'to'},
+    {from:'shop:'+s.domain, to:'reg', dashes:true, color:{color:'#64748b', opacity:0.35}, arrows:'to'},
+  ])
+]);
+const network = new vis.Network($('graph'), {nodes, edges}, {
+  physics:{forceAtlas2Based:{gravitationalConstant:-46, springLength:120}, solver:'forceAtlas2Based', stabilization:{iterations:120}},
+  interaction:{hover:true, tooltipDelay:80},
+  edges:{smooth:{type:'continuous'}, font:{size:9, color:'#64748b', strokeWidth:0}},
+});
+network.on('click', params=>{
+  if(!params.nodes.length) return;
+  const id=params.nodes[0];
+  if(id.startsWith('shop:')) openShop(id.slice(5));
+  else if(id.startsWith('pay:')) openPay(id.slice(4));
+  else if(id==='op') openInfo('Operator handle','Public WordPress author/admin string <code>viethoa24</code>. Not asserted as a named natural person.');
+});
+
+function openInfo(title, html){
+  $('dtitle').textContent=title; $('dbody').innerHTML=html;
+  $('drawer').hidden=false; $('drawer').classList.add('open'); $('backdrop').classList.add('open');
+}
+function openShop(domain){
+  const s=shops.find(x=>x.domain===domain); if(!s) return;
+  openInfo(s.shop, `<p class="dom"><code>${s.domain}</code></p><p>Checkout → <b>${s.payment}</b> (<code>${s.paymentDomain}</code>)</p><p class="pill">Fake storefront</p>`);
+  location.hash='shop='+domain;
+  network.selectNodes(['shop:'+domain]); network.focus('shop:'+domain,{scale:1.2,animation:true});
+}
+function openPay(domain){
+  const p=payments.find(x=>x.domain===domain); if(!p) return;
+  const kids=shops.filter(s=>s.paymentDomain===domain);
+  openInfo(p.label, `<p><code>${p.domain}</code></p><p>Receives checkout from ${kids.length} shop(s):</p><ul>${kids.map(k=>`<li>${k.shop}</li>`).join('')}</ul>`);
+}
+$('dclose').onclick=$('backdrop').onclick=()=>{
+  $('drawer').classList.remove('open'); $('backdrop').classList.remove('open');
+  setTimeout(()=>$('drawer').hidden=true,200);
+};
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') $('dclose').click(); });
+
+// cards
+const paySel=$('payFilter');
+[...new Set(shops.map(s=>s.payment))].sort().forEach(p=>{
+  const o=document.createElement('option'); o.value=p; o.textContent=p; paySel.appendChild(o);
+});
+function renderCards(){
+  const q=$('q').value.toLowerCase(); const pf=paySel.value;
+  $('cards').innerHTML=shops.filter(s=>{
+    const hay=(s.shop+' '+s.domain+' '+s.payment).toLowerCase();
+    return (!q||hay.includes(q)) && (!pf||s.payment===pf);
+  }).map(s=>`<article class="card" tabindex="0" data-d="${s.domain}"><h3>${s.shop}</h3><div class="dom">${s.domain}</div><div class="pay">→ ${s.payment}</div></article>`).join('');
+  $('cards').querySelectorAll('.card').forEach(el=>{
+    el.onclick=()=>openShop(el.dataset.d);
+    el.onkeydown=e=>{ if(e.key==='Enter') openShop(el.dataset.d); };
+  });
+}
+$('q').oninput=paySel.onchange=renderCards; renderCards();
+
+// money
+$('money').innerHTML=payments.map(p=>{
+  const kids=shops.filter(s=>s.paymentDomain===p.domain);
+  return `<div class="money-group"><h3>${p.label} <span class="pill">${kids.length}</span></h3><code>${p.domain}</code><ul>${kids.map(k=>`<li>${k.shop} — <code>${k.domain}</code></li>`).join('')}</ul></div>`;
+}).join('');
+
+// maps
+$('maps').innerHTML=DATA.mapsContamination.map(m=>`<div class="item"><b>${m.id}</b><div>${m.listing}</div><code>${m.fake}</code><div class="${filedClass(m.mapsEdit)}">${m.mapsEdit}</div></div>`).join('');
+
+// filings
+$('filings').innerHTML=Object.entries(DATA.filings).map(([k,v])=>`<div class="item"><b>${k}</b><div class="${filedClass(v)}">${v}</div></div>`).join('');
+
+// deep link
+const m=location.hash.match(/shop=([^&]+)/); if(m) openShop(decodeURIComponent(m[1]));
+</script>
+</body>
+</html>
