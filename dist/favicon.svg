@@ -1,4 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
-  <rect width="32" height="32" rx="8" fill="#1877F2"/>
-  <text x="16" y="22" text-anchor="middle" fill="white" font-family="system-ui,sans-serif" font-weight="800" font-size="18">F</text>
+  <rect width="32" height="32" rx="6" fill="#12181f"/>
+  <path d="M8 22V14c0-1.1.9-2 2-2h1.5l1-3h7l1 3H22c1.1 0 2 .9 2 2v8" stroke="#1877F2" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M10 22h12" stroke="#1877F2" stroke-width="1.5" stroke-linecap="round"/>
+  <circle cx="16" cy="10" r="2" fill="#1877F2" opacity="0.6"/>
+  <circle cx="22" cy="8" r="1.5" fill="#1877F2"/>
+  <circle cx="10" cy="8" r="1.5" fill="#1877F2"/>
+  <line x1="16" y1="10" x2="22" y2="8" stroke="#1877F2" stroke-width="0.75" opacity="0.5"/>
+  <line x1="16" y1="10" x2="10" y2="8" stroke="#1877F2" stroke-width="0.75" opacity="0.5"/>
 </svg>
