@@ -1,27 +1,4 @@
-# Logs
-logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
-
-node_modules
-dist-ssr
-.wrangler
+node_modules/
+.vite/
+.wrangler/
 *.local
-
-# dist/ is committed for CoS deploy without build step
-
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
-.DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
-fakeboot-dist.tgz.b64
