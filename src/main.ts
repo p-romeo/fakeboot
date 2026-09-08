@@ -34,15 +34,15 @@ function renderHero() {
   counters.innerHTML = `
     <div class="counter-card" data-reveal>
       <div class="counter-value" data-count="${DATA.lockedShops}">0</div>
-      <div class="counter-label">Fake storefronts</div>
+      <div class="counter-label">Fake shops confirmed</div>
     </div>
     <div class="counter-card" data-reveal>
       <div class="counter-value" data-count="${DATA.payments.length}">0</div>
-      <div class="counter-label">Payment hosts</div>
+      <div class="counter-label">Cash registers taking the money</div>
     </div>
     <div class="counter-card" data-reveal>
       <div class="counter-value" data-count="${submitted}">0</div>
-      <div class="counter-label">Filings submitted</div>
+      <div class="counter-label">Agencies and platforms reported to</div>
     </div>
   `;
 
@@ -199,7 +199,7 @@ function renderMoneyFlow() {
         <div class="money-host-header">
           <div class="money-host-name">${escapeHtml(payment)}</div>
           <div class="money-host-domain">${escapeHtml(host?.domain ?? "")}</div>
-          <div class="money-host-count">${shops.length} shop${shops.length === 1 ? "" : "s"} route checkout here</div>
+          <div class="money-host-count">${shops.length} fake shop${shops.length === 1 ? "" : "s"} send their checkout here</div>
         </div>
         <ul class="money-shop-list">
           ${shops
@@ -227,8 +227,8 @@ function renderMaps() {
     <div class="maps-card reveal">
       <div class="maps-id">${escapeHtml(hit.id)}</div>
       <div class="maps-listing">${escapeHtml(hit.listing)}</div>
-      <div class="maps-fake">Fake site: ${escapeHtml(hit.fake)}</div>
-      <span class="status-badge submitted">Maps edit ${escapeHtml(hit.mapsEdit)}</span>
+      <div class="maps-fake">Fake site planted here: ${escapeHtml(hit.fake)}</div>
+      <span class="status-badge submitted">Correction filed ${escapeHtml(hit.mapsEdit)}</span>
     </div>`,
     )
     .join("");
@@ -239,14 +239,14 @@ function renderFilings() {
   if (!board) return;
 
   const entries: Array<[string, string, "submitted" | "blocked" | "hold" | "partial"]> = [
-    ["Namecheap", DATA.filings.namecheap, classifyStatus(DATA.filings.namecheap)],
-    ["FTC", DATA.filings.ftc, classifyStatus(DATA.filings.ftc)],
+    ["Namecheap (domain seller)", DATA.filings.namecheap, classifyStatus(DATA.filings.namecheap)],
+    ["FTC (US consumer protection)", DATA.filings.ftc, classifyStatus(DATA.filings.ftc)],
     ["Google Ads", DATA.filings.googleAds, classifyStatus(DATA.filings.googleAds)],
     ["Google Maps", DATA.filings.maps, classifyStatus(DATA.filings.maps)],
-    ["Cloudflare", DATA.filings.cloudflare, classifyStatus(DATA.filings.cloudflare)],
+    ["Cloudflare (site security)", DATA.filings.cloudflare, classifyStatus(DATA.filings.cloudflare)],
     ["PayPal", DATA.filings.paypal, classifyStatus(DATA.filings.paypal)],
-    ["IC3", DATA.filings.ic3, classifyStatus(DATA.filings.ic3)],
-    ["HK Extracts", DATA.filings.hkExtracts, classifyStatus(DATA.filings.hkExtracts)],
+    ["FBI's IC3 cybercrime unit", DATA.filings.ic3, classifyStatus(DATA.filings.ic3)],
+    ["Hong Kong company records", DATA.filings.hkExtracts, classifyStatus(DATA.filings.hkExtracts)],
   ];
 
   board.innerHTML = entries
@@ -294,28 +294,32 @@ function renderStory() {
 
   const steps = [
     {
-      title: "Fake local storefronts",
-      body: `${DATA.lockedShops} websites impersonate real US shoe-repair and tailor shops — copied branding, fake addresses, professional-looking pages.`,
+      title: "Steal a shop's identity",
+      body: `The operators pick a real, beloved local shoe-repair shop — one with years of good reviews — and build a copy of its website. Same name, same street address, same logo style. To a customer, it's indistinguishable from the real thing. ${DATA.lockedShops} of these clones have been confirmed so far.`,
     },
     {
-      title: "Shared WordPress footprint",
-      body: `All sites share the WordPress admin handle "${DATA.operatorHandle.split(" ")[0]}" — a string in source code, not proof of a named individual.`,
+      title: "Register the fakes in a factory run",
+      body: `The fake domains weren't bought one at a time. A batch of them was registered through ${DATA.registrar} within roughly forty seconds of each other — the signature of automation, not a coincidence. More batches followed until the confirmed count hit fifteen.`,
     },
     {
-      title: "Namecheap registration",
-      body: `Domains registered through ${DATA.registrar}, often with privacy WHOIS — the registrar thread includes indicators and shop addenda.`,
+      title: "Let Google deliver the customers",
+      body: "The cruelest step: the fake website's address gets written into the real shop's Google Maps listing. Now anyone who searches for the actual cobbler gets handed the impostor on a plate. The real shop has no idea this is happening — until the angry calls start about orders it never took.",
     },
     {
-      title: "Checkout to payment hosts",
-      body: `${DATA.payments.length} third-party payment hosts collect money via PayPal Client IDs and cart proxies — shops never keep checkout on their own domains.`,
+      title: "Send checkout somewhere else",
+      body: `When you click buy, the payment form doesn't belong to the fake shop. It loads from one of ${DATA.payments.length} separate outside websites — the cash registers. The shop name is just a costume; the register is where money actually changes hands, through PayPal accounts connected to those registers.`,
     },
     {
-      title: "Maps contamination",
-      body: "Fake URLs appear on Google Maps listings for real businesses. Suggest-an-edit corrections submitted for National, Cobblers, Nu-Way, and Verona.",
+      title: "Rotate the register, keep the scam",
+      body: 'When a cash register gets reported or scrutinized, the operators don\'t shut down — they swap. One fake shop moved its checkout to a brand-new register in a single day. The storefront stays up, the till changes, and customers never notice.',
     },
     {
-      title: "Takedown in progress",
-      body: "Filings submitted to Namecheap, FTC, and Google Ads. Maps partial. Cloudflare CAPTCHA, PayPal login, and IC3 phone requirements block some channels.",
+      title: "The fingerprints they left behind",
+      body: `Every fake site runs the same WordPress software under the same admin handle, "${DATA.operatorHandle.split(" ")[0]}". Six of the eight live cash registers publish the same Hong Kong office address. A software handle isn't a person's name, and a shared office building isn't proof of ownership on its own — but the pattern, taken together, points at one operation.`,
+    },
+    {
+      title: "The fight so far",
+      body: "Reports are in with the domain registrar, the FTC, and Google Ads. Four fake storefronts have already been taken offline at the registrar level. The cash registers are a harder fight — they're separate businesses in another jurisdiction, and some reporting channels require phone verification or logins I don't have. This investigation stays open.",
     },
   ];
 
@@ -375,7 +379,7 @@ function closeDrawer() {
 
 function drawerHtml(meta: GraphNodeMeta): string {
   const disclaimer =
-    '<div class="drawer-disclaimer">Investigation by Paul Romeo (third party). Victim shop owners are not operators. Handles are technical identifiers only.</div>';
+    '<div class="drawer-disclaimer">Independently investigated by Paul Romeo. The real shops are victims of this scheme, not part of it.</div>';
 
   switch (meta.kind) {
     case "operator":
@@ -383,12 +387,16 @@ function drawerHtml(meta: GraphNodeMeta): string {
         <span class="drawer-kind operator">Operator handle</span>
         <h2 class="drawer-title">viethoa24</h2>
         <div class="drawer-field">
-          <div class="drawer-field-label">Identifier type</div>
-          <div class="drawer-field-value">WordPress admin/author string</div>
+          <div class="drawer-field-label">What this is</div>
+          <div class="drawer-field-value">A software username found in the admin tools of every fake site</div>
         </div>
         <div class="drawer-field">
           <div class="drawer-field-label">Connections</div>
-          <div class="drawer-field-value">Runs all ${DATA.lockedShops} fake storefronts</div>
+          <div class="drawer-field-value">Appears on all ${DATA.lockedShops} fake storefronts</div>
+        </div>
+        <div class="drawer-field">
+          <div class="drawer-field-label">Important caveat</div>
+          <div class="drawer-field-value">This is a username string, not a person's name — no individual has been identified</div>
         </div>
         ${disclaimer}`;
 
@@ -397,8 +405,8 @@ function drawerHtml(meta: GraphNodeMeta): string {
         <span class="drawer-kind registrar">Registrar</span>
         <h2 class="drawer-title">${escapeHtml(DATA.registrar)}</h2>
         <div class="drawer-field">
-          <div class="drawer-field-label">Role</div>
-          <div class="drawer-field-value">Domain registration for all storefronts in this network</div>
+          <div class="drawer-field-label">What this is</div>
+          <div class="drawer-field-value">The company the operators used to buy their fake website addresses</div>
         </div>
         <div class="drawer-field">
           <div class="drawer-field-label">Filing status</div>
@@ -412,14 +420,18 @@ function drawerHtml(meta: GraphNodeMeta): string {
 
     case "payment":
       return `
-        <span class="drawer-kind payment">Payment host</span>
+        <span class="drawer-kind payment">Cash register</span>
         <h2 class="drawer-title">${escapeHtml(meta.label)}</h2>
         <div class="drawer-field">
           <div class="drawer-field-label">Domain</div>
           <div class="drawer-field-value">${escapeHtml(meta.domain ?? "")}</div>
         </div>
         <div class="drawer-field">
-          <div class="drawer-field-label">Shops routing here</div>
+          <div class="drawer-field-label">What this is</div>
+          <div class="drawer-field-value">An outside website where the fake shops' checkout payments actually load — not a shop, just the till</div>
+        </div>
+        <div class="drawer-field">
+          <div class="drawer-field-label">Fake shops feeding it</div>
           <div class="drawer-field-value">${DATA.shopToPayment
             .filter((s) => s.payment === meta.paymentLabel)
             .map((s) => escapeHtml(s.shop))
@@ -443,18 +455,22 @@ function shopDrawerHtml(shop: ShopPayment): string {
       <div class="drawer-field-value">${escapeHtml(shop.domain)}</div>
     </div>
     <div class="drawer-field">
-      <div class="drawer-field-label">Checkout routes to</div>
+      <div class="drawer-field-label">Whose identity it stole</div>
+      <div class="drawer-field-value">${escapeHtml(shop.shop)} — a real local business</div>
+    </div>
+    <div class="drawer-field">
+      <div class="drawer-field-label">Where checkout money goes</div>
       <div class="drawer-field-value">${escapeHtml(shop.payment)} (${escapeHtml(shop.paymentDomain)})</div>
     </div>
     <div class="drawer-field">
-      <div class="drawer-field-label">WordPress handle</div>
-      <div class="drawer-field-value">viethoa24</div>
+      <div class="drawer-field-label">Operator's software handle</div>
+      <div class="drawer-field-value">viethoa24 — a username, not a proven name</div>
     </div>
     <div class="drawer-field">
       <div class="drawer-field-label">Registrar</div>
       <div class="drawer-field-value">${escapeHtml(DATA.registrar)}</div>
     </div>
-    <div class="drawer-disclaimer">Investigation by Paul Romeo (third party). Victim shop owners are not operators.</div>`;
+    <div class="drawer-disclaimer">Independently investigated by Paul Romeo. The real shops are victims of this scheme, not part of it.</div>`;
 }
 
 function focusShop(domain: string) {

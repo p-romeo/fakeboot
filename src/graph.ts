@@ -57,7 +57,7 @@ export function buildNetworkGraph(
   nodes.push({
     id: operatorId,
     label: "viethoa24",
-    title: "WordPress handle only — not a proven natural person",
+    title: "The operator's software username — appears on every fake site. Not a person's name.",
     size: 28,
     ...nodeStyle("operator"),
   });
@@ -70,7 +70,7 @@ export function buildNetworkGraph(
   nodes.push({
     id: registrarId,
     label: data.registrar,
-    title: "Domain registrar",
+    title: "The company where the fake domains were bought",
     size: 22,
     ...nodeStyle("registrar"),
   });
@@ -124,7 +124,7 @@ export function buildNetworkGraph(
     nodes.push({
       id: payId,
       label: truncate(payment.label, 18),
-      title: `${payment.label}\n${payment.domain}`,
+      title: `${payment.label}\n${payment.domain}\nA cash register: where the fake shops' checkout money actually lands`,
       size: 24,
       ...nodeStyle("payment"),
     });
@@ -139,7 +139,7 @@ export function buildNetworkGraph(
       color: { color: "#f97316cc", highlight: "#fb923c" },
       width: 2,
       arrows: { to: { enabled: true, scaleFactor: 0.7 } },
-      title: "sends checkout to",
+      title: "your money goes here at checkout",
       smooth: { type: "curvedCW", roundness: 0.15 },
     });
   }

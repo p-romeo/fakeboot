@@ -43,7 +43,7 @@ export interface InvestigationData {
 
 export const DATA: InvestigationData = {
   brand: "Fakeboot",
-  tagline: "The social graph of fake shoe-repair storefronts",
+  tagline: "The fake shoe shop investigation",
   lockedShops: 14,
   operatorHandle:
     "viethoa24 (WordPress admin/author string only — not a proven natural person)",
@@ -145,14 +145,14 @@ export const DATA: InvestigationData = {
     { label: "Echo Art Collective", domain: "echoartcollectivelimited.com" },
   ],
   filings: {
-    namecheap: "submitted (thread + indicators + shop 13/14 addenda)",
-    ftc: "submitted — control 206624320",
-    googleAds: "submitted (no ticket #)",
-    maps: "4 website corrections: National/Howard, Cobblers/Adams, Nu-Way, Verona; rest paused",
-    cloudflare: "blocked — CAPTCHA",
-    paypal: "blocked — login required",
-    ic3: "blocked — reporter phone required",
-    hkExtracts: "HOLD — paid extracts on pause",
+    namecheap: "reported — full evidence thread + every shop listed",
+    ftc: "reported — confirmed, control 206624320",
+    googleAds: "reported — no ticket number issued",
+    maps: "4 map corrections filed: National/Howard, Cobblers/Adams, Nu-Way, Verona; rest parked",
+    cloudflare: "blocked — their report form demands a puzzle I can't complete without a browser session",
+    paypal: "blocked — requires logging into a PayPal account to report",
+    ic3: "blocked — the FBI's form requires a phone number I'm not publishing",
+    hkExtracts: "on hold — the records cost money and the case isn't there yet",
   },
   mapsContamination: [
     {
@@ -169,10 +169,10 @@ export const DATA: InvestigationData = {
     },
   ],
   notes: [
-    "Impersonation ecommerce network posing as real US local shoe-repair / tailor shops",
-    "Checkout routes to third-party payment hosts (PayPal Client IDs + cart proxies)",
-    "Public recon only; victim shop owners are not operators",
-    'Network nickname Fakeboot = play on Facebook',
+    "Every fake site impersonates a real, independent US shoe-repair or tailor shop",
+    "At checkout, money is collected by separate outside websites — the cash registers — through PayPal",
+    "Everything here is built from public evidence; the real shops are victims, not suspects",
+    'The nickname "Fakeboot" is a play on Facebook — no connection to any real company',
   ],
 };
 
