@@ -2,7 +2,6 @@ import "vis-network/styles/vis-network.min.css";
 import "./style.css";
 import {
   DATA,
-  filingsSubmittedCount,
   shopsByPayment,
   type ShopPayment,
 } from "./data";
@@ -27,7 +26,7 @@ function init() {
 }
 
 function renderHero() {
-  const submitted = filingsSubmittedCount(DATA.filings);
+
   const counters = document.getElementById("hero-counters");
   if (!counters) return;
 
@@ -39,10 +38,6 @@ function renderHero() {
     <div class="counter-card" data-reveal>
       <div class="counter-value" data-count="${DATA.payments.length}">0</div>
       <div class="counter-label">Cash registers taking the money</div>
-    </div>
-    <div class="counter-card" data-reveal>
-      <div class="counter-value" data-count="${submitted}">0</div>
-      <div class="counter-label">Agencies and platforms reported to</div>
     </div>
   `;
 
@@ -299,7 +294,7 @@ function renderStory() {
     },
     {
       title: "Register the fakes in a factory run",
-      body: `The fake domains weren't bought one at a time. A batch of them was registered through ${DATA.registrar} within roughly forty seconds of each other — the signature of automation, not a coincidence. More batches followed until the confirmed count hit fifteen.`,
+      body: `The fake domains weren't bought one at a time. A batch of them was registered through ${DATA.registrar} within roughly forty seconds of each other — the signature of automation, not a coincidence. More batches followed until the confirmed count hit fourteen.`,
     },
     {
       title: "Let Google deliver the customers",
