@@ -1,0 +1,117 @@
+# Fakeboot — repo orientation
+
+_Last updated: 2026-09-22_
+
+A newcomer's guide to what this repo is, how it's laid out, how to run it, and
+what's currently rough or unfinished.
+
+## What this is
+
+Fakeboot is a single-page investigation microsite. It documents an impersonation
+ecommerce network: a set of fake storefronts that copy real, independent U.S.
+shoe-repair and tailor shops, and route checkout to a handful of third-party
+payment hosts. The real shops are victims, not operators. All data is from public
+recon. "Fakeboot" is a play on "Facebook" and has no connection to any real
+company.
+
+The site presents the investigation as an interactive network graph plus several
+data panels (shop explorer, money flow, Google Maps contamination, filings
+status, and a plain-English narrative).
+
+## Stack
+
+- **Vite 6 + TypeScript** (vanilla, no framework)
+- **vis-network / vis-data** for the interactive graph
+- **Cloudflare Workers** for hosting, static assets served via Wrangler
+- Target custom domain: `fakeboot.paulromeo.net`
+
+## Repo layout
+
+```
+index.html              # HTML shell; Vite entry
+src/
+  data.ts               # Canonical investigation data + helper functions
+  graph.ts              # vis-network graph construction
+  main.ts               # App bootstrap, renders every panel, drawer, deep links
+  style.css             # All styling
+  vite-env.d.ts
+public/favicon.svg      # Static asset copied into dist/
+worker.js               # Cloudflare Worker entry (serves dist/ + a /mcp stub)
+wrangler.jsonc          # Worker + assets config; main = worker.js
+vite.config.ts          # Build → dist/, no sourcemaps
+tsconfig.json           # Strict TS, noEmit (Vite does the emit)
+dist/                   # Committed build output (checked into git)
+live/                   # Orphan snapshot of a previously deployed worker (see below)
+BUILD_REPORT.md         # One-off build log from 2026-09-04
+README.md
+```
+
+Data flows one direction: `src/data.ts` is the single source of truth. `main.ts`
+imports `DATA` and the helpers (`shopsByPayment`, `filingsSubmittedCount`), and
+`graph.ts` turns the shop→payment relationships into graph nodes and edges.
+
+## Install / run / test
+
+Node 20+ (developed against 22). No env vars or secrets are needed — all data is
+static and public.
+
+```bash
+npm install
+npm run dev        # Vite dev server, default http://localhost:5173
+npm run build      # tsc typecheck + vite build → dist/
+npm run preview    # serve the built dist/ locally
+npm run deploy      # npm run build, then wrangler deploy (needs Cloudflare auth)
+```
+
+There is **no test suite and no linter** — `npm run build` (which runs `tsc` in
+strict mode before Vite) is the only automated check. I ran it on 2026-09-22: it
+succeeds, exit code 0. Expect one non-fatal warning that the JS chunk exceeds
+500 kB; that's `vis-network` being bundled, and it's expected.
+
+### Deep links
+
+Shop detail panels are addressable by hash route:
+
+```
+https://fakeboot.paulromeo.net/#shop=veronaleathershoe.com
+```
+
+## What's broken or half-finished
+
+Nothing blocks build or local dev, but three things are worth knowing before you
+touch deploy or the data:
+
+1. **`worker.js` has a runtime bug in the asset fallthrough.** The handler is
+   declared `async fetch(request)` but its last line calls `env.ASSETS.fetch(request)`
+   — `env` is never a parameter, so any request other than `/mcp` throws a
+   `ReferenceError` instead of serving the static site. The fix is to accept the
+   binding: `async fetch(request, env)`. This only bites when the Worker actually
+   runs the fallthrough in production; local Vite dev and `preview` don't exercise
+   it, which is likely why it hasn't been caught. Verify against a real Cloudflare
+   deploy before trusting it.
+
+2. **`live/` is an orphan and has drifted ahead of `src/`.** `live/worker.mjs` is
+   a fully self-contained Worker with its own inlined HTML, CSS, JS, and a copy of
+   the investigation data. Nothing references it — not `README`, `wrangler.jsonc`,
+   or `package.json` — so it appears to be a snapshot of an earlier hand-built
+   deploy. Its data is **one cycle ahead** of the canonical `src/data.ts`: `live/`
+   lists 15 shops (`lockedShops: 15`, adds "Warrick's Shoe Service") and a third
+   Maps-contamination entry (PC-015), whereas `src/data.ts` has 14 shops
+   (`lockedShops: 14`) and two Maps entries. If `src/` is the source of truth, it
+   needs the Warrick's shop, the extra Maps entry, and the updated filings status
+   ported in; otherwise `live/` should be deleted so it stops being mistaken for
+   current. Decide which is authoritative before editing either.
+
+3. **`BUILD_REPORT.md` and committed `dist/` are stale.** `BUILD_REPORT.md`
+   (dated 2026-09-04) references hashed asset filenames (`index--Ydndz93.css`,
+   `index-oVrFZd_F.js`) that no longer match what the current source builds
+   (`index-DvAk1te3.css`, `index-DQTemuyt.js`). The `dist/` in git is a committed
+   build artifact; it's regenerated by `npm run build`, so treat it as output, not
+   source, and don't hand-edit it.
+
+## Investigation status (from the data, as of this snapshot)
+
+Tracked in `src/data.ts` under `filings`: reports submitted to Namecheap and the
+FTC (control 206624320), a Google Ads report, and four Google Maps website
+corrections. IC3, Cloudflare abuse, PayPal, and paid HK company extracts are
+blocked or on hold. These are content, not code — update them in `data.ts`.
